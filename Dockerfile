@@ -1,7 +1,13 @@
-# syntax=docker/dockerfile:1
+FROM python:3-alpine
 
-FROM python:3.10-slim-buster
+# set python to use utf-8 rather than ascii.
+ENV PYTHONIOENCODING="UTF-8"
 
-RUN pip3 install -r requirements.txt
+# Make sure Python output to stdout appear in realtime
+ENV PYTHONUNBUFFERED=0
 
-CMD [ "python3", "app.py"]
+RUN apk add --update --no-cache tzdata git py3-pip python3-dev && \
+    git clone -b main --single-branch https://github.com/morpheus65535/dnslookup_api.git /dnslookup_api && \
+    pip3 install -r /dnslookup_api/requirements.txt
+
+CMD [ "python3", "/dnslookup_api/app.py"]
