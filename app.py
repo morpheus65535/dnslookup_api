@@ -4,7 +4,7 @@ import dns.resolver
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/nslookup', methods=['GET'])
 def main():
     args = request.args
     apikey = args.get('apikey')
