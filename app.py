@@ -24,9 +24,12 @@ def main():
         return jsonify(error='no fqdn provided'), 400
     else:
         response = {'cname': None,
+                    'ip': None,
                     'error': None}
         try:
-            response['cname'] = resolver.resolve(fqdn, raise_on_no_answer=True).canonical_name.to_text().strip('.')
+            query_response = resolver.resolve(fqdn, raise_on_no_answer=True)
+            response['cname'] = query_response.canonical_name.to_text().strip('.')
+            response['ip'] = [x.address for x in query_response]
         except (resolver.NXDOMAIN, resolver.NoNameservers, resolver.NoAnswer) as e:
             response['error'] = repr(e)
         finally:
