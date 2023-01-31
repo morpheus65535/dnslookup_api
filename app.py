@@ -2,6 +2,7 @@
 
 from os import environ
 from dns import resolver
+from publicsuffix2 import get_sld
 
 from flask import Flask, request, jsonify
 
@@ -25,7 +26,8 @@ def main():
     else:
         response = {'cname': None,
                     'ip': None,
-                    'error': None}
+                    'error': None,
+                    'root_domain': True if get_sld(fqdn) == fqdn else False}
         try:
             query_response = resolver.resolve(fqdn, raise_on_no_answer=True)
             response['cname'] = query_response.canonical_name.to_text().strip('.')
